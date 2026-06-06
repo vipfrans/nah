@@ -1,7 +1,9 @@
 [build]
-builder = "nixpacks"
-buildCommand = "npm install -g pnpm && pnpm install && pnpm --filter @workspace/api-server run build"
+buildCommand = "pnpm --filter @workspace/api-server run build"
 
 [deploy]
 startCommand = "node --enable-source-maps artifacts/api-server/dist/index.mjs"
 restartPolicyType = "always"
+
+[deploy.variables]
+RAILPACK_INSTALL_CMD = "corepack enable && pnpm install --no-frozen-lockfile"
