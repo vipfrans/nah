@@ -71,6 +71,14 @@ export const commands = [
         .setMinValue(1)
         .setMaxValue(100),
     ),
+
+  new SlashCommandBuilder()
+    .setName("restart")
+    .setDescription("[Admin] Restart the bot process"),
+
+  new SlashCommandBuilder()
+    .setName("shutdown")
+    .setDescription("[Admin] Shut down the bot process"),
 ].map((cmd) => cmd.toJSON());
 
 export async function handleCommand(
@@ -222,6 +230,72 @@ export async function handleCommand(
       ],
       ephemeral: true,
     });
+    return;
+  }
+
+  // ── /restart ─────────────────────────────────────────────
+  if (commandName === "restart") {
+    if (!isAdmin(interaction)) {
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0xed4245)
+            .setTitle("✦ Access Denied")
+            .setDescription("You are not authorised to run this command.")
+            .setFooter({ text: FOOTER }),
+        ],
+        ephemeral: true,
+      });
+      return;
+    }
+
+    await interaction.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(0xfee75c)
+          .setTitle("✦ Restarting")
+          .setDescription("The bot is restarting now. It will be back online in a few seconds.")
+          .setFooter({ text: FOOTER })
+          .setTimestamp(),
+      ],
+      ephemeral: true,
+    });
+
+    logger.info("Bot restart triggered by admin");
+    setTimeout(() => process.exit(0), 1000);
+    return;
+  }
+
+  // ── /shutdown ────────────────────────────────────────────
+  if (commandName === "shutdown") {
+    if (!isAdmin(interaction)) {
+      await interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(0xed4245)
+            .setTitle("✦ Access Denied")
+            .setDescription("You are not authorised to run this command.")
+            .setFooter({ text: FOOTER }),
+        ],
+        ephemeral: true,
+      });
+      return;
+    }
+
+    await interaction.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(0xed4245)
+          .setTitle("✦ Shutting Down")
+          .setDescription("The bot is going offline. Goodbye.")
+          .setFooter({ text: FOOTER })
+          .setTimestamp(),
+      ],
+      ephemeral: true,
+    });
+
+    logger.info("Bot shutdown triggered by admin");
+    setTimeout(() => process.exit(1), 1000);
     return;
   }
 
