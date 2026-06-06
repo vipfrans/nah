@@ -5,5 +5,3 @@ buildCommand = "pnpm --filter @workspace/api-server run build"
 startCommand = "node --enable-source-maps artifacts/api-server/dist/index.mjs"
 restartPolicyType = "always"
 
-[deploy.variables]
-RAILPACK_INSTALL_CMD = "corepack enable && pnpm install --no-frozen-lockfile"
